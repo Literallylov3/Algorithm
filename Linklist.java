@@ -160,6 +160,7 @@ public class Linklist {
         Linklist odd = new Linklist();
         Linklist even = new Linklist();
         ListNode current = list.head;
+        //divide list to odd part and even part
         while(current != null){
             if(current.data % 2 != 0){
                 odd.add(current.data);
@@ -169,6 +170,7 @@ public class Linklist {
                 current = current.next;
             }
         }
+        //add even to the end of odd part
         current = even.head;
         while(current != null){
             odd.add(current.data);
@@ -176,6 +178,166 @@ public class Linklist {
         }
         return odd;
    }
+   //resort list: divide list to left and right based on mid, reverse right part and finally connect each other
+   //example:1->2->3->4->5 => 1->2->3 and 4->5 => 1->2->3 and 5->4 => 1->5->2->4->3
+   public static Linklist resort(Linklist list){
+        if(list.head == null || list.head.next == null) return list;
+        ListNode mid = findMid(list.head);
+        //spilt
+        Linklist right = new Linklist();
+        right.head = mid.next;
+        //break point avoiding unstoppable loop
+        mid.next = null;
+        Linklist left = new Linklist();
+        left.head = list.head;
+        //reverse part
+        right.reverse();
+        //connection part
+        ListNode first = left.head;
+        ListNode second = right.head;
+        //based on findMid, we know left is always larger than right
+        //therefore second will run out first
+        while(second != null){
+            //record next node
+            ListNode nxtFirst = first.next;
+            ListNode nxtSecond = second.next;
+            //connect
+            first.next = second;
+            second.next = nxtFirst;
+            //updates
+            first = nxtFirst;
+            second = nxtSecond;
+        }
+        return left;
+   }
+
+   //find a common node for two linklist
+   public static ListNode commonNode(Linklist l1, Linklist l2){
+        if(l1.head == null || l2.head == null) return null;
+        ListNode cur1 = l1.head;
+        ListNode cur2 = l2.head;
+        //when cur1 meet cur2 that node is common node
+        while(cur1 != cur2){
+            cur1 = (cur1 == null)? l2.head : cur1.next;
+            cur2 = (cur2 == null)? l1.head : cur2.next;
+        }
+        return cur1;
+   }
+
+   //judge whether linklist is ring or not
+   public static boolean isRing(Linklist list){
+        if(list.head == null || list.head.next == null) return false;
+        //fast and slow start at different node in order to get in loop
+        ListNode fast = list.head.next;
+        ListNode slow = list.head;
+        while(fast != slow){
+            if(fast == null || fast.next == null) return false;
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        return true;
+   }
+
+   //find the ring entry node
+   public static ListNode ringEntryNode(Linklist list){
+        if(!isRing(list)) return null;
+        ListNode fast = list.head.next;
+        ListNode slow = list.head;
+        //first round
+        while(fast != slow){
+            //slow must go first
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        //reset fast
+        fast = list.head;
+        slow = slow.next;
+        //second round
+        while(fast != slow){
+            slow = slow.next;
+            fast = fast.next;
+        }
+        return fast;
+   }
+
+   //reverse by couple : 1->2->3->4->5 => 2->1->4->3->5
+   public static Linklist reverseByCouple(Linklist list){
+        if(list.head == null || list.head.next == null) return list;
+        //set dummy to record head
+        ListNode dummy = new ListNode(-1);
+        dummy.next = list.head;
+        //set pointer
+        ListNode prev = dummy;
+        while(prev.next != null && prev.next.next != null){
+            ListNode current = prev.next;
+            ListNode nxt = prev.next.next;
+            //connect
+            prev.next = nxt;
+            current.next = nxt.next;
+            nxt.next = current;
+            //updates prev
+            prev = current;
+        }
+        Linklist res = new Linklist();
+        res.head = dummy.next;
+        return res;
+   }
+
+   //reverse depend on k
+   //example: if k=2 reverse by couple, if k=3 then 1->2->3->4 => 3->2->1->4
+   //updates reverse method which can help us reverse only based on given head and tail
+   public static ListNode[] reverse(ListNode head, ListNode tail){
+       //reverse the whole linklist
+       ListNode prev = null;
+       ListNode current = head;
+       while(current != null){
+           ListNode nxt = current.next;
+           current.next = prev;
+           prev = current;
+           current = nxt;
+       }
+       //now 1->2->3 => 1<-2<-3, what we need to do is to return new "head" and "tail"
+       return new ListNode[]{tail,head};
+   }
+   public static Linklist reverseByK(Linklist list, int k){
+        if(list.head == null || list.head.next == null) return list;
+        if(k<2) return list;
+        Linklist res = new Linklist();
+        //set dummy to record head
+        ListNode dummy = new ListNode(-1);
+        dummy.next = list.head;
+        ListNode prev = dummy;
+        while(prev.next != null && prev.next.next != null){
+            ListNode tail = prev;
+            ListNode head = prev.next;
+            //find tail depend on k
+            for (int i = 0; i < k; i++) {
+                tail = tail.next;
+                //if remain is not enough
+                if(tail == null){
+                    res.head = dummy.next;
+                    return res;
+                }
+            }
+            //record next node
+            ListNode nxt = tail.next;
+            //break head and tail
+            prev.next = null;
+            tail.next = null;
+            //reverse
+            ListNode[] reverse = reverse(head,tail);
+            head = reverse[0];
+            tail = reverse[1];
+            //connect
+            prev.next = head;
+            tail.next = nxt;
+            //updates
+            prev = tail;
+        }
+        res.head = dummy.next;
+        return res;
+   }
+
    public static void main(String[] args){
 
    }
