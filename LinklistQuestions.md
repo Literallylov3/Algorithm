@@ -34,7 +34,7 @@ Linklist的建立可以设置头节点为空或不为空。
 
 ## *2.Basic method*
 
-我们设置基本方法：print/add/rmParam/reverse便于我们之后测试。
+我们设置基本方法：print/add/rmParam/reverse便于我们之后测试。对于这四个basic method，由于都是只遍历一次list，并且都是in place，所以时间复杂度都是O(n)，空间复杂度是O(1)。
 
 ### `print`
 
@@ -161,7 +161,7 @@ public static ListNode findMid(ListNode head){
 }
 ```
 
-
+时间复杂度: O(n)，空间复杂度: O(1)
 
 ### `mergesort`：归并排序
 
@@ -217,6 +217,10 @@ public static Linklist merge(Linklist l1, Linklist l2){
 }
 ```
 
+时间复杂度: O(n+m)，空间复杂度: O(n+m)
+
+
+
 #### `mergesort`
 
 Example: 1->7->3->5->2->4->6->1->null
@@ -249,6 +253,10 @@ public static Linklist mergesort(Linklist list){
      return merge(leftSort,rightSort);
 }
 ```
+
+时间复杂度: O(nlogn)，空间复杂度: O(nlogn)
+
+
 
 ### `oddFront`:  奇数在前
 
@@ -286,6 +294,10 @@ public static Linklist oddFront(Linklist list){
      return odd;
 }
 ```
+
+时间复杂度: O(n)，空间复杂度: O(n)
+
+
 
 ### `resort`： 后半段reverse再间隔连接
 
@@ -329,6 +341,10 @@ public static Linklist resort(Linklist list){
 }
 ```
 
+时间复杂度: O(n)，空间复杂度: O(n)
+
+
+
 ### `commonNode`: 寻找公共node
 
 假设有两个list穿过一个common node，我们需要return这个node。
@@ -350,6 +366,10 @@ public static ListNode commonNode(Linklist l1, Linklist l2){
 }
 ```
 
+时间复杂度: O(n+m)，空间复杂度: O(1)
+
+
+
 ### `isRing`: 判断list是否成环
 
 思路：运用快慢指针，如果list成环，快指针一定会重新与慢指针相交
@@ -369,6 +389,10 @@ public static boolean isRing(Linklist list){
      return true;
 }
 ```
+
+时间复杂度: O(n)，空间复杂度: O(1)
+
+
 
 ### `ringEntryNode`: 找出入环点
 
@@ -398,7 +422,7 @@ public static ListNode ringEntryNode(Linklist list){
 }
 ```
 
-
+时间复杂度: O(n)，空间复杂度: O(1)
 
 
 
@@ -435,6 +459,10 @@ public static Linklist reverseByCouple(Linklist list){
      return res;
 }
 ```
+
+时间复杂度: O(n)，空间复杂度: O(1)
+
+
 
 ### `reverseByK`: reverse k by k
 
@@ -499,3 +527,4 @@ public static Linklist reverseByK(Linklist list, int k){
 }
 ```
 
+时间复杂度: O(n)，空间复杂度: O(1)
