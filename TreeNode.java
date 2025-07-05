@@ -1,3 +1,4 @@
+import java.util.*;
 public class TreeNode {
     int data;
     TreeNode left;
@@ -129,7 +130,69 @@ public class TreeNode {
         root.right = left;
         return root;
     }
-    public static void main(String[] args){
 
+    //calcPathSum: calculate path sum
+    public static int calcPathSum(TreeNode root){
+        if(root == null) return 0;
+        return auxOfcalcPS(root,0);
     }
+    public static int auxOfcalcPS(TreeNode root, int prev){
+        if(root == null) return 0;
+        //updates current value
+        int current = root.data + prev * 10;
+        if(root.left == null && root.right == null){
+            return current;
+        }else{
+            //recursion
+            int left = auxOfcalcPS(root.left,current);
+            int right = auxOfcalcPS(root.right,current);
+            return left+right;
+        }
+    }
+
+    //targetEqualPS: find num of path that path sum equal to target(do not need to time 10 each layer)
+    public static int targetEqualPS(TreeNode root, int target){
+        if(root == null) return 0;
+        return auxTargetEqlPS(root,target,0);
+    }
+    public static int auxTargetEqlPS(TreeNode root, int target, int prev){
+        if(root == null) return 0;
+        //updates current value of node
+        int current = root.data + prev;
+        int count = 0;
+        if(root.left == null && root.right == null){
+            if(current == target){
+                count++;
+            }
+        }else{
+            //recursion
+            count += auxTargetEqlPS(root.left,target,current);
+            count += auxTargetEqlPS(root.right,target,current);
+        }
+        return count;
+    }
+
+    //targetEqualPS2: same with first one but don't need to start at root
+    public static int targetEqualPS2(TreeNode root, int target){
+        if(root == null) return 0;
+        //calc whole tree
+        int count = auxTargetEqlPS(root,target,0);
+        //calc subtree by recursion
+        count += auxTargetEqlPS(root.left,target,0);
+        count += auxTargetEqlPS(root.right,target,0);
+        return count;
+    }
+
+    //faltten: change binary tree to linklist
+    /*public static void faltten(TreeNode root){
+        List<TreeNode> list = new LinkedList<>();
+    }
+    public static */
+    public static void main(String[] args){
+        TreeNode root = new TreeNode(1);
+        root.right = new TreeNode(3);
+        root.left = new TreeNode(2);
+        System.out.println(targetEqualPS2(root,3));
+    }
+
 }
